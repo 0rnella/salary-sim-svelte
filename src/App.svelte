@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-    import Visualization from './lib/Visualization.svelte';
+    import Insights from './lib/Insights.svelte';
     import SalarySelector from './lib/SalarySelector.svelte';
     import Form from './lib/Form.svelte';
 
@@ -35,7 +35,7 @@
     {#key finances}
         {#if finances.monthlySpend}
             <SalarySelector {finances} {updateSalary} />
-            <Visualization {finances} />
+            <Insights {finances} />
         {/if}
     {/key}
 </main>

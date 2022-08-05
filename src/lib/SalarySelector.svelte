@@ -2,7 +2,7 @@
     export let finances, updateSalary;
 </script>
 
-<div>
-    <label for="salary">What is your desired salary?</label>
+<div id="salary-selector">
+    <label for="salary">How much do you want to make yearly?</label>
     <input type="number" value={finances.salary} on:change={updateSalary} />
 </div>

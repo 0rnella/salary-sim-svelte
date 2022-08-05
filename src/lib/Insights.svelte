@@ -13,14 +13,14 @@
     const totalMonthlySpend = monthlySpend * (1 + cushion);
     finances.yearlySpend = Math.round((totalMonthlySpend * 12 + oneyearDebtPay) / percentageSalaryAfterTax);
     if (!finances.salary) finances.salary = finances.yearlySpend;
-    const oneYearSavings = finances.salary - finances.yearlySpend;
 </script>
 
-<div>
+<section id="insights" class="container">
+    <h2>Insights</h2>
     {#key finances.yearlySpend}
-        <p>The minimum salary to cover your spending goals is {finances.yearlySpend}</p>
+        <p>The minimum salary to cover your spending goals is {finances.yearlySpend}.</p>
     {/key}
-    {#key oneYearSavings}
-        <p>Your savings after one year would be {oneYearSavings}</p>
+    {#key finances.debt}
+        <p>Your net money is {-finances.debt} now.</p>
     {/key}
-</div>
+</section>
