@@ -1,14 +1,10 @@
-#finances-form {
-    width: 100%;
-}
-
 .container {
     border: 4px solid black;
     padding:2rem;
     margin: 1rem 0;
 }
 
-input, button {
+input {
     border: 2px solid black;
     background-color: #edf2f4;
     padding: 0.2rem;
@@ -18,5 +14,7 @@ input, button {
 button {
     border: 4px solid black;
     font-weight: bold;
+    background-color: #edf2f4;
+    padding: 0.4rem;
     font-size: 1.2rem;
 }

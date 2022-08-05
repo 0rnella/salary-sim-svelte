@@ -1,41 +1,35 @@
 <script lang="ts" context="module">
     export type Finances = {
-        monthlySpend?: number;
-        debt?: number;
-        debtRepaymentMonths?: number;
-        incomeTaxRate?: number;
+        formValues: {
+            monthlySpend?: number;
+            debt?: number;
+            debtRepaymentMonths?: number;
+            incomeTaxRate?: number;
+        };
         yearlySpend?: number;
+        minSalary?: number;
         salary: number;
     };
 </script>
 
 <script lang="ts">
-    import Insights from './lib/Insights.svelte';
-    import SalarySelector from './lib/SalarySelector.svelte';
-    import Form from './lib/Form.svelte';
+    import AboutYou from './lib/AboutYou.svelte';
+    import Simulation from './lib/Simulation.svelte';
 
-    const processForm = ({ target }) => {
-        const formData = new FormData(target);
-        for (const entry of formData.entries()) {
-            const [name, value] = entry;
-            finances[name] = Number(value);
-        }
+    let finances: Finances = {
+        formValues: {},
+        salary: 0,
     };
 
-    const updateSalary = ({ target }) => {
-        finances.salary = target.value;
-    };
-
-    let finances: Finances = { monthlySpend: 0, incomeTaxRate: 25, salary: 0 };
+    const updateFinances = (newFinances) => (finances = { ...finances, ...newFinances });
 </script>
 
 <main>
     <h1>Salary Sim</h1>
-    <Form {finances} {processForm} />
+    <AboutYou {finances} {updateFinances} />
     {#key finances}
-        {#if finances.monthlySpend}
-            <SalarySelector {finances} {updateSalary} />
-            <Insights {finances} />
+        {#if finances.formValues.monthlySpend}
+            <Simulation {finances} {updateFinances} />
         {/if}
     {/key}
 </main>
