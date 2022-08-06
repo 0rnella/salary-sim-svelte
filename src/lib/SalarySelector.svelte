@@ -2,8 +2,9 @@
     export let finances, updateFinances;
 
     const updateSalary = ({ target }) => {
-        const newSalary = Number(target.value);
-        updateFinances({ salary: newSalary });
+        const salary = Number(target.value);
+        const netSalary = salary * (1 - finances.formValues.incomeTaxRate / 100);
+        updateFinances({ salary, netSalary });
     };
 </script>
 

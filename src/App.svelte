@@ -10,6 +10,7 @@
         cushionedMonthlySpend?: number;
         yearlySpend?: number;
         minSalary?: number;
+        netSalary?: number;
         salary: number;
     };
 </script>

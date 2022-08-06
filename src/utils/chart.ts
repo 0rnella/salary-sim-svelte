@@ -1,23 +1,16 @@
-const getDebtAtMonth = ({ month, debt, debtRepaymentMonths }): number => {
-    const monthsPaidToDate = debtRepaymentMonths < month ? debtRepaymentMonths : month;
-    const debtPaidToDate = (monthsPaidToDate * debt) / debtRepaymentMonths;
-
-    return -Math.round(debt - debtPaidToDate);
-};
-
-const getWealthAtMonth = ({ month, debtAtMonth, salary, cushionedMonthlySpend }): number => {
-    const moneyEarned = salary * month / 12;
-    const moneySpent = cushionedMonthlySpend * month;
-    return Math.round(moneyEarned - moneySpent + debtAtMonth);
-};
 
 export const calculateMoneyAtMonth = ({ month, finances }): {debt: number, wealth:number} => {
-    const { salary, cushionedMonthlySpend } = finances;
+    const { netSalary, yearlySpend } = finances;
     const { debt, debtRepaymentMonths } = finances.formValues;
+    
+    const monthsPaidToDate = debtRepaymentMonths < month ? debtRepaymentMonths : month;
+    const debtPaidToDate = (monthsPaidToDate * debt) / debtRepaymentMonths;
+    
+    const moneyEarned = netSalary * month / 12;
+    const moneySpent = yearlySpend * month / 12;
+    const debtAtMonth = -Math.round(debt - debtPaidToDate);
+    const wealth = Math.round(moneyEarned - moneySpent + debtAtMonth);
 
-    const debtAtMonth = getDebtAtMonth({month, debt, debtRepaymentMonths});
-
-    const wealth = getWealthAtMonth({month, debtAtMonth, salary, cushionedMonthlySpend})
 
     return {
         debt: debtAtMonth,
