@@ -6,6 +6,8 @@
             debtRepaymentMonths?: number;
             incomeTaxRate?: number;
         };
+        monthlyDebtPay?: number;
+        cushionedMonthlySpend?: number;
         yearlySpend?: number;
         minSalary?: number;
         salary: number;

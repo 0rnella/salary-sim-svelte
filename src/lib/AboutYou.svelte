@@ -19,7 +19,9 @@
             {/if}
         {/key}
         {#if finances.formValues.monthlySpend}
+            <!-- {#key finances.formValues} -->
             <Insights {finances} {updateFinances} />
+            <!-- {/key} -->
         {/if}
     </div>
 </section>
