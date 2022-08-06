@@ -7,7 +7,7 @@
 <section id="simulation" class="container">
     <h2>Simulation</h2>
     <SalarySelector {finances} {updateFinances} />
-    {#key finances}
+    {#key finances.formValues}
         <Chart {finances} />
     {/key}
 </section>

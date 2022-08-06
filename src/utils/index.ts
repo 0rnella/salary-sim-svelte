@@ -4,7 +4,6 @@ export const calculate = (finances:Finances): Partial<Finances> => {
     const { monthlySpend, incomeTaxRate, debt, debtRepaymentMonths } = finances.formValues;
 
     /* Debt*/
-    console.log('debt', debt, debtRepaymentMonths)
     const monthlyDebtPay = debtRepaymentMonths ? debt / debtRepaymentMonths : 0;
     const repaymentMonths = debtRepaymentMonths <= 12 ? debtRepaymentMonths : 12;
     const oneyearDebtPay = repaymentMonths * monthlyDebtPay;

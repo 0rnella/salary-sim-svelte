@@ -17,17 +17,17 @@
 <form id="finances-form" on:submit|preventDefault={processForm}>
     <p>
         <label for="monthlySpend">How much do you spend monthly?</label>
-        <input type="number" name="monthlySpend" min={1} value={formValues.monthlySpend || 0} />
+        <input type="number" name="monthlySpend" min={1} value={formValues.monthlySpend || 2500} />
     </p>
 
     <p>
         <label for="debt">How much debt do you have to pay?</label>
-        <input type="number" name="debt" min={0} value={formValues.debt || 0} />
+        <input type="number" name="debt" min={0} value={formValues.debt || 45000} />
     </p>
 
     <p>
         <label for="debtRepaymentMonths">Over how many months do you want to pay off your debt?</label>
-        <input type="number" name="debtRepaymentMonths" min={0} value={formValues.debtRepaymentMonths || 0} />
+        <input type="number" name="debtRepaymentMonths" min={0} value={formValues.debtRepaymentMonths || 18} />
     </p>
 
     <p>

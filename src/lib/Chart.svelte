@@ -1,51 +1,41 @@
-<script>
-    // import type { Finances } from '../App.svelte';
+<script lang="ts">
+    import { addCoordinates, getDebtAtMonth, makePointString } from '../utils/chart';
     export let finances;
-    let scale = 30;
-    let width = scale * 12;
-    let height = scale * 10;
+    const { debt, debtRepaymentMonths } = finances.formValues;
 
-    console.log('FINANCES', finances);
+    const width = 600;
+    const height = 400;
+    const numberPoints = 13;
 
-    let points = [];
-    for (let month = 0; month <= 12; month++) {
-        const monthsPaidToDate =
-            finances.formValues.debtRepaymentMonths < month ? finances.formValues.debtRepaymentMonths : month;
-        const debtPaidToDate = monthsPaidToDate * finances.monthlyDebtPay;
+    const debtValues = new Array(numberPoints).fill(0).map((point, i) =>
+        getDebtAtMonth({
+            month: i,
+            debt,
+            debtRepaymentMonths,
+        }),
+    );
 
-        const debtRemaining = -Math.round(finances.formValues.debt - debtPaidToDate);
+    const debtPoints = addCoordinates({ values: debtValues, width, height });
 
-        points.push(debtRemaining);
-    }
-
-    const range = {
-        max: Math.max(...points),
-        min: Math.min(...points),
-    };
-
-    const scaleValue = (value) => (height * (range.max - value)) / (range.max - range.min);
-
-    console.log('POINTS', points);
-
-    let debtString = points.map((point, i) => `${i * scale},${scaleValue(point)}`).join('\n');
+    const debtString = makePointString(debtPoints);
 </script>
 
 <div id="chart">
     {#if finances.salary}
-        <svg width={scale * (points.length - 1)} height={10 * scale}>
+        <svg {width} {height}>
             <!-- x axis -->
-            <line x1="0" x2={scale * (points.length - 1)} y1={10 * scale} y2={10 * scale} />
-            <g class="x" transform={`translate(0,${10 * scale + 20})`}>
-                {#each points as point, i}
-                    <text x={i * scale}>{i}</text>
+            <line x1="0" x2={width} y1={height} y2={height} />
+            <g class="x" transform={`translate(0,${height + 20})`}>
+                {#each debtPoints as point, i}
+                    <text x={point.x}>{i}</text>
                 {/each}
             </g>
 
             <!-- y axis -->
             <line x1="0" x2="0" y1="0" y2={height} />
             <g class="y" transform="translate(-10,0)">
-                {#each points as point, i}
-                    <text y={scaleValue(point)}>{point}</text>
+                {#each debtPoints as point}
+                    <text y={point.y}>{point.value}</text>
                 {/each}
             </g>
 
