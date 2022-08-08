@@ -40,12 +40,15 @@
                 {/each}
             </g>
 
-            <line
-                x1="0"
-                x2={width}
-                y1={scaleY({ value: 0, valueRange, height })}
-                y2={scaleY({ value: 0, valueRange, height })}
-            />
+            <!-- x line for 0-->
+            {#if valueRange.min <= 0 && valueRange.max >= 0}
+                <line
+                    x1="0"
+                    x2={width}
+                    y1={scaleY({ value: 0, valueRange, height })}
+                    y2={scaleY({ value: 0, valueRange, height })}
+                />
+            {/if}
 
             <!-- y axis -->
             <line x1="0" x2="0" y1="0" y2={height} />
