@@ -4,7 +4,7 @@
 
     import { formComplete } from './stores.js';
 
-    import { Section, Form, Insights, SalarySelector, Chart } from './lib/_index';
+    import { Section, Form, Insights, SalarySelector, Chart, ShowToggler } from './lib/_index';
 
     let userInfo: UserInfo = {
         selectedSalary: 0,
@@ -17,19 +17,16 @@
 
         calculations = calculate(userInfo);
     };
-
-    let showForm: boolean = true;
-    formComplete.subscribe((complete) => (showForm = !complete));
 </script>
 
 <main>
     <h1>Salary Sim</h1>
     <Section title="About You" id="about-content">
-        {#if showForm}
-            <Form {userInfo} {updateUserInfo} />
-        {:else}
-            <button on:click={() => formComplete.set(false)}>Edit info</button>
-        {/if}
+        <ShowToggler storeKey={formComplete}>
+            <Form slot="show-state" {userInfo} {updateUserInfo} />
+            <button slot="hide-state" on:click={() => formComplete.set(false)}>Edit info</button>
+        </ShowToggler>
+
         {#if calculations}
             {#key calculations}
                 <Insights {calculations} />
