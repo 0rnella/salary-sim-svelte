@@ -3,6 +3,6 @@
 </script>
 
 <div id="insights">
-    <p>Yearly spending: {calculations.yearlySpend}</p>
-    <p>Minimum gross salary: {calculations.minSalary}</p>
+    <p>Your yearly spending: {calculations.yearlySpend}</p>
+    <p>You should ask for a minimum gross salary of: {calculations.minSalary}</p>
 </div>
