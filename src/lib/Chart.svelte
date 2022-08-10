@@ -1,6 +1,6 @@
 <script lang="ts">
     import { addCoordinates, calculateMoneyAtMonth, makePointString, makeYAnnotations, scaleY } from '../utils/chart';
-    export let userInfo, calculations;
+    import { calculations, userInfo } from '../stores.js';
 
     const width = 600;
     const height = 400;
@@ -9,7 +9,7 @@
     const debtValues = [];
     const wealthValues = [];
     for (let month = 0; month <= numberMonths; month++) {
-        const moneyAtMonth = calculateMoneyAtMonth({ month, userInfo, calculations });
+        const moneyAtMonth = calculateMoneyAtMonth({ month, userInfo: $userInfo, calculations: $calculations });
 
         debtValues.push(moneyAtMonth.debt);
         wealthValues.push(moneyAtMonth.wealth);

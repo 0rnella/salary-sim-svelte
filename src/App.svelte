@@ -1,19 +1,9 @@
 <script lang="ts">
-    import type { UserInfo, Calculations } from './utils/types';
-
-    import { formComplete } from './stores.js';
-
+    import { calculate } from './utils';
+    import { formComplete, calculations, userInfo } from './stores.js';
     import { Section, Form, Insights, SalarySelector, Chart, ShowToggler } from './lib/_index';
 
-    let userInfo: UserInfo = {
-        selectedSalary: 0,
-    };
-    let calculations: Calculations;
-
-    const updateUserInfo = (newUserInfo) => {
-        userInfo = { ...userInfo, ...newUserInfo };
-        console.log('user info', userInfo);
-    };
+    calculations.set(calculate($userInfo));
 </script>
 
 <main>
@@ -27,13 +17,12 @@
             </div>
         </ShowToggler>
     </Section>
-    {#if calculations}
+
+    {#if $calculations.minSalary}
         <Section title="Simulation" id="simulation">
-            <SalarySelector {userInfo} {calculations} {updateUserInfo} />
-            {#if userInfo.selectedSalary}
-                {#key calculations}
-                    <Chart {userInfo} {calculations} />
-                {/key}
+            <SalarySelector />
+            {#if $userInfo.selectedSalary}
+                <Chart />
             {/if}
         </Section>
     {/if}
