@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { calculations, userInfo } from '../stores';
-    console.log('from insights: user info was refreshed', $userInfo);
+    import { calculations } from '../stores';
 </script>
 
 <div id="insights">
