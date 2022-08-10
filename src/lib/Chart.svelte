@@ -1,31 +1,23 @@
 <script lang="ts">
-    import { addCoordinates, calculateMoneyAtMonth, makePointString, makeYAnnotations, scaleY } from '../utils/chart';
+    import { getChartData, scaleY } from '../utils/chart';
     import { calculations, userInfo } from '../stores.js';
 
     const width = 600;
     const height = 400;
     const numberMonths = 12;
+    let chartData;
 
-    const debtValues = [];
-    const wealthValues = [];
-    for (let month = 0; month <= numberMonths; month++) {
-        const moneyAtMonth = calculateMoneyAtMonth({ month, userInfo: $userInfo, calculations: $calculations });
-
-        debtValues.push(moneyAtMonth.debt);
-        wealthValues.push(moneyAtMonth.wealth);
-    }
-    const valueRange = {
-        max: Math.max(...debtValues, ...wealthValues),
-        min: Math.min(...debtValues, ...wealthValues),
-    };
-
-    const debtPoints = addCoordinates({ valueRange, values: debtValues, width, height });
-    const wealthPoints = addCoordinates({ valueRange, values: wealthValues, width, height });
-
-    const debtString = makePointString(debtPoints);
-    const wealthString = makePointString(wealthPoints);
-
-    const yAnnotations = makeYAnnotations(valueRange);
+    calculations.subscribe((calc) => {
+        chartData = getChartData(
+            {
+                width,
+                height,
+                numberMonths,
+            },
+            $userInfo,
+            calc,
+        );
+    });
 </script>
 
 <div id="chart">
@@ -34,42 +26,42 @@
         <!-- x axis -->
         <line x1="0" x2={width} y1={height} y2={height} />
         <g class="x" transform={`translate(0,${height + 20})`}>
-            {#each debtPoints as point, i}
+            {#each chartData.debtPoints as point, i}
                 <text x={point.x}>{i}</text>
             {/each}
         </g>
 
         <!-- x line for 0-->
-        {#if valueRange.min <= 0 && valueRange.max >= 0}
+        {#if chartData.valueRange.min <= 0 && chartData.valueRange.max >= 0}
             <line
                 x1="0"
                 x2={width}
-                y1={scaleY({ value: 0, valueRange, height })}
-                y2={scaleY({ value: 0, valueRange, height })}
+                y1={scaleY({ value: 0, valueRange: chartData.valueRange, height })}
+                y2={scaleY({ value: 0, valueRange: chartData.valueRange, height })}
             />
         {/if}
 
         <!-- y axis -->
         <line x1="0" x2="0" y1="0" y2={height} />
         <g class="y" transform="translate(-10,0)">
-            {#each yAnnotations as value}
-                <text y={scaleY({ value, valueRange, height })}>{Math.floor(value / 1000)}k</text>
+            {#each chartData.yAnnotations as value}
+                <text y={scaleY({ value, valueRange: chartData.valueRange, height })}>{Math.floor(value / 1000)}k</text>
             {/each}
         </g>
 
         <!-- data -->
-        {#if debtPoints}
-            <polyline style="stroke: red; stroke-width: 2" points={debtString} />
-            {@const endDebtPoint = debtPoints[numberMonths - 1]}
+        {#if chartData.debtPoints}
+            <polyline style="stroke: red; stroke-width: 2" points={chartData.debtString} />
+            {@const endDebtPoint = chartData.debtPoints[numberMonths - 1]}
 
             <text y={endDebtPoint.y - 20} x={endDebtPoint.x + 60}>
                 Debt: {endDebtPoint.value}
             </text>
         {/if}
 
-        {#if wealthPoints}
-            <polyline style="stroke: green; stroke-width: 2" points={wealthString} />
-            {@const endWealth = wealthPoints[numberMonths - 1]}
+        {#if chartData.wealthPoints}
+            <polyline style="stroke: green; stroke-width: 2" points={chartData.wealthString} />
+            {@const endWealth = chartData.wealthPoints[numberMonths - 1]}
 
             <text y={endWealth.y - 20} x={endWealth.x + 60}>
                 Wealth: {endWealth.value}

@@ -1,9 +1,6 @@
 <script lang="ts">
-    import { calculate } from './utils';
     import { formComplete, calculations, userInfo } from './stores.js';
     import { Section, Form, Insights, SalarySelector, Chart, ShowToggler } from './lib/_index';
-
-    calculations.set(calculate($userInfo));
 </script>
 
 <main>
