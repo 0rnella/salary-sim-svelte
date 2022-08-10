@@ -1,8 +1,7 @@
 <script lang="ts">
     import { FormInput } from './_index';
-    import { formComplete } from '../stores.js';
-
-    export let userInfo, updateUserInfo;
+    import { calculate } from '../utils';
+    import { formComplete, calculations, userInfo } from '../stores.js';
 
     const processForm = ({ target }) => {
         let formValues = {};
@@ -11,8 +10,8 @@
             const [name, value] = entry;
             formValues[name] = Number(value);
         }
-
-        updateUserInfo(formValues);
+        userInfo.update((info) => ({ ...info, ...formValues }));
+        calculations.set(calculate($userInfo));
         formComplete.set(true);
     };
 </script>
@@ -22,21 +21,21 @@
         key="monthlySpend"
         prompt="How much do you spend monthly?"
         minimum={1}
-        value={userInfo.monthlySpend}
+        value={$userInfo.monthlySpend}
         defaultValue={2500}
     />
-    <FormInput key="debt" prompt="How much debt do you have to pay?" minimum={0} value={userInfo.debt} />
+    <FormInput key="debt" prompt="How much debt do you have to pay?" minimum={0} value={$userInfo.debt} />
     <FormInput
         key="debtRepaymentMonths"
         prompt="Over how many months do you want to pay off your debt?"
         minimum={1}
-        value={userInfo.debtRepaymentMonths}
+        value={$userInfo.debtRepaymentMonths}
     />
     <FormInput
         key="incomeTaxRate"
         prompt="What's your estimated total income tax (in percentage points)?"
         minimum={1}
-        value={userInfo.incomeTaxRate}
+        value={$userInfo.incomeTaxRate}
         defaultValue={25}
     />
 

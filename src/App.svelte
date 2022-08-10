@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { UserInfo, Calculations } from './utils/types';
-    import { calculate } from './utils';
 
     import { formComplete } from './stores.js';
 
@@ -14,8 +13,6 @@
     const updateUserInfo = (newUserInfo) => {
         userInfo = { ...userInfo, ...newUserInfo };
         console.log('user info', userInfo);
-
-        calculations = calculate(userInfo);
     };
 </script>
 
@@ -23,15 +20,12 @@
     <h1>Salary Sim</h1>
     <Section title="About You" id="about-content">
         <ShowToggler storeKey={formComplete}>
-            <Form slot="show-state" {userInfo} {updateUserInfo} />
-            <button slot="hide-state" on:click={() => formComplete.set(false)}>Edit info</button>
+            <Form slot="show-state" />
+            <div slot="hide-state">
+                <button on:click={() => formComplete.set(false)}>Edit info</button>
+                <Insights />
+            </div>
         </ShowToggler>
-
-        {#if calculations}
-            {#key calculations}
-                <Insights {calculations} />
-            {/key}
-        {/if}
     </Section>
     {#if calculations}
         <Section title="Simulation" id="simulation">
