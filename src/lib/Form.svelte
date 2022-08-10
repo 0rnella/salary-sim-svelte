@@ -1,5 +1,5 @@
 <script lang="ts">
-    import FormInput from './FormInput.svelte';
+    import { FormInput } from './_index';
     import { formComplete } from '../stores.js';
 
     export let userInfo, updateUserInfo;

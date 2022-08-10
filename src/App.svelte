@@ -4,11 +4,7 @@
 
     import { formComplete } from './stores.js';
 
-    import Section from './lib/Section.svelte';
-    import Form from './lib/Form.svelte';
-    import Insights from './lib/Insights.svelte';
-    import SalarySelector from './lib/SalarySelector.svelte';
-    import Chart from './lib/Chart.svelte';
+    import { Section, Form, Insights, SalarySelector, Chart } from './lib/_index';
 
     let userInfo: UserInfo = {
         selectedSalary: 0,
