@@ -1,6 +1,9 @@
 <script lang="ts">
     import type { UserInfo, Calculations } from './utils/types';
     import { calculate } from './utils';
+
+    import { formComplete } from './stores.js';
+
     import Section from './lib/Section.svelte';
     import Form from './lib/Form.svelte';
     import Insights from './lib/Insights.svelte';
@@ -11,7 +14,6 @@
         selectedSalary: 0,
     };
     let calculations: Calculations;
-    let showForm = true;
 
     const updateUserInfo = (newUserInfo) => {
         userInfo = { ...userInfo, ...newUserInfo };
@@ -20,16 +22,17 @@
         calculations = calculate(userInfo);
     };
 
-    const toggleForm = () => (showForm = !showForm);
+    let showForm: boolean = true;
+    formComplete.subscribe((complete) => (showForm = !complete));
 </script>
 
 <main>
     <h1>Salary Sim</h1>
     <Section title="About You" id="about-content">
         {#if showForm}
-            <Form {userInfo} {updateUserInfo} {toggleForm} />
+            <Form {userInfo} {updateUserInfo} />
         {:else}
-            <button on:click={toggleForm}>Edit info</button>
+            <button on:click={() => formComplete.set(false)}>Edit info</button>
         {/if}
         {#if calculations}
             {#key calculations}

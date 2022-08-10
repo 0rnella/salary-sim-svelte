@@ -1,6 +1,8 @@
 <script lang="ts">
     import FormInput from './FormInput.svelte';
-    export let userInfo, updateUserInfo, toggleForm;
+    import { formComplete } from '../stores.js';
+
+    export let userInfo, updateUserInfo;
 
     const processForm = ({ target }) => {
         let formValues = {};
@@ -11,7 +13,7 @@
         }
 
         updateUserInfo(formValues);
-        toggleForm();
+        formComplete.set(true);
     };
 </script>
 
