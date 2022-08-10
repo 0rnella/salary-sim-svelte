@@ -1,7 +1,7 @@
 
-export const calculateMoneyAtMonth = ({ month, finances }): {debt: number, wealth:number} => {
-    const { netSalary, yearlySpend } = finances;
-    const { debt, debtRepaymentMonths } = finances.formValues;
+export const calculateMoneyAtMonth = ({ month, userInfo, calculations }): {debt: number, wealth:number} => {
+    const { netSalary, yearlySpend } = calculations;
+    const { debt, debtRepaymentMonths } = userInfo;
     
     const monthsPaidToDate = debtRepaymentMonths < month ? debtRepaymentMonths : month;
     const debtPaidToDate = (monthsPaidToDate * debt) / debtRepaymentMonths;

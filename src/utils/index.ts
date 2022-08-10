@@ -1,7 +1,7 @@
-import type { Finances } from '../App.svelte';
+import type { Calculations, UserInfo } from './types';
 
-export const calculate = (finances:Finances): Partial<Finances> => {
-    const { monthlySpend, incomeTaxRate, debt, debtRepaymentMonths } = finances.formValues;
+export const calculate = (userInfo: UserInfo): Calculations => {
+    const { monthlySpend, incomeTaxRate, debt, debtRepaymentMonths, selectedSalary } = userInfo;
 
     /* Debt*/
     const monthlyDebtPay = debtRepaymentMonths ? debt / debtRepaymentMonths : 0;
@@ -18,6 +18,7 @@ export const calculate = (finances:Finances): Partial<Finances> => {
 
     /* Salary */
     const minSalary = Math.round(yearlySpend / percentageSalaryAfterTax);
+    const netSalary = Math.round(selectedSalary * percentageSalaryAfterTax);
 
-    return {yearlySpend, minSalary, monthlyDebtPay, cushionedMonthlySpend};
+    return {yearlySpend, minSalary, monthlyDebtPay, cushionedMonthlySpend, netSalary};
 }

@@ -1,13 +1,9 @@
 <script lang="ts">
-    import { calculate } from '../utils';
-    export let finances, updateFinances;
-
-    const calculations = calculate(finances);
-    updateFinances({ ...calculations });
+    export let calculations;
 </script>
 
 <div id="insights">
-    <p>Yearly spending: {finances.yearlySpend}</p>
-    <p>Minimum gross salary: {finances.minSalary}</p>
-    <p>Starting net wealth: {-finances.formValues.debt}</p>
+    <p>Yearly spending: {calculations.yearlySpend}</p>
+    <p>Minimum gross salary: {calculations.minSalary}</p>
+    <!-- <p>Starting net wealth: {-finances.formValues.debt}</p> -->
 </div>
