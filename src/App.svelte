@@ -11,6 +11,7 @@
         selectedSalary: 0,
     };
     let calculations: Calculations;
+    let showForm = true;
 
     const updateUserInfo = (newUserInfo) => {
         userInfo = { ...userInfo, ...newUserInfo };
@@ -18,12 +19,18 @@
 
         calculations = calculate(userInfo);
     };
+
+    const toggleForm = () => (showForm = !showForm);
 </script>
 
 <main>
     <h1>Salary Sim</h1>
     <Section title="About You" id="about-content">
-        <Form {userInfo} {updateUserInfo} />
+        {#if showForm}
+            <Form {userInfo} {updateUserInfo} {toggleForm} />
+        {:else}
+            <button on:click={toggleForm}>Edit info</button>
+        {/if}
         {#if calculations}
             {#key calculations}
                 <Insights {calculations} />

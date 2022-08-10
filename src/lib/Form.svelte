@@ -1,6 +1,6 @@
 <script lang="ts">
     import FormInput from './FormInput.svelte';
-    export let userInfo, updateUserInfo;
+    export let userInfo, updateUserInfo, toggleForm;
 
     const processForm = ({ target }) => {
         let formValues = {};
@@ -11,7 +11,7 @@
         }
 
         updateUserInfo(formValues);
-        // toggleForm();
+        toggleForm();
     };
 </script>
 
