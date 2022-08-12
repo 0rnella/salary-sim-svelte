@@ -15,19 +15,27 @@ export const getChartData = ({ height, width, numberMonths }, userInfo: UserInfo
         min: Math.min(...debtValues, ...wealthValues),
     };
 
-    const debtPoints = addCoordinates({ valueRange, values: debtValues, width, height });
-    const wealthPoints = addCoordinates({ valueRange, values: wealthValues, width, height });
+    const scale = buildScale({ height, width, valueRange, valueLength: debtValues.length });
+
+    const debtPoints = addCoordinates({ values: debtValues, scale });
+    const wealthPoints = addCoordinates({ values: wealthValues, scale });
     return {
-        debtPoints,
-        wealthPoints,
+        categories: [
+            { points: debtPoints, string: makePointString(debtPoints), displayName: 'Debt', displayColor: 'red' },
+            {
+                points: wealthPoints,
+                string: makePointString(wealthPoints),
+                displayName: 'Wealth',
+                displayColor: 'forestGreen',
+            },
+        ],
         valueRange,
-        debtString: makePointString(debtPoints),
-        wealthString: makePointString(wealthPoints),
-        yAnnotations: makeYAnnotations(valueRange),
+        yAnnotations: addCoordinates({ values: makeYNotches(valueRange), scale }),
+        zeroY: scale.scaleY(0),
     };
 };
 
-export const calculateMoneyAtMonth = ({ month, userInfo, calculations }): { debt: number; wealth: number } => {
+const calculateMoneyAtMonth = ({ month, userInfo, calculations }): { debt: number; wealth: number } => {
     const { netSalary, yearlySpend } = calculations;
     const { debt, debtRepaymentMonths } = userInfo;
 
@@ -45,14 +53,18 @@ export const calculateMoneyAtMonth = ({ month, userInfo, calculations }): { debt
     };
 };
 
-const scaleX = (index: number, width, valueLength) => Math.round((width / valueLength) * index);
-export const scaleY = ({ value, height, valueRange }) =>
-    Math.round((height * (valueRange.max - value)) / (valueRange.max - valueRange.min || 1));
-export const addCoordinates = ({ valueRange, values, width, height }) => {
+const buildScale = ({ height, width, valueRange, valueLength }) => {
+    return {
+        scaleX: (val: number) => Math.round((width / valueLength) * val),
+        scaleY: (val: number) => Math.round((height * (valueRange.max - val)) / (valueRange.max - valueRange.min || 1)),
+    };
+};
+
+export const addCoordinates = ({ values, scale }) => {
     return values.map((value, i) => ({
         value,
-        x: scaleX(i, width, values.length),
-        y: scaleY({ value, height, valueRange }),
+        x: scale.scaleX(i),
+        y: scale.scaleY(value),
     }));
 };
 
@@ -60,15 +72,22 @@ export const makePointString = (points) => {
     return points.map((point) => `${point.x},${point.y}`).join('\n');
 };
 
-export const makeYAnnotations = (valueRange) => {
-    let annotations = [];
-    let scale = 0;
+export const makeYNotches = ({ min, max }) => {
+    let notches = [min, max];
+    const range = Math.abs(max - min);
 
-    while (scale >= valueRange.min) scale -= 5000;
+    // we want 5-ish notches
+    const amtNotches = 5;
+    const rangeDigitsLength = Math.floor(range / amtNotches).toString().length;
+    const quotient = Math.pow(10, rangeDigitsLength - 1);
+    const space = Math.round(range / amtNotches / quotient) * quotient;
 
-    while (scale <= valueRange.max) {
-        scale += 10000;
-        annotations.push(scale);
+    let notch = Math.round(min / space) * space;
+
+    while (notch <= max) {
+        notch += space;
+        notches.push(notch);
     }
-    return annotations;
+
+    return notches;
 };

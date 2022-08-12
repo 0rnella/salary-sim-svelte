@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getChartData, scaleY } from '../utils/chart';
+    import { getChartData } from '../utils/chart';
     import { calculations, userInfo } from '../stores.js';
 
     const width = 600;
@@ -18,6 +18,10 @@
             calc,
         );
     });
+
+    let abbreviate = (num: number): string => {
+        return Math.abs(num) < 1000 ? num.toString() : `${Math.floor(num / 100) / 10}k`;
+    };
 </script>
 
 <div id="chart">
@@ -26,47 +30,36 @@
         <!-- x axis -->
         <line x1="0" x2={width} y1={height} y2={height} />
         <g class="x" transform={`translate(0,${height + 20})`}>
-            {#each chartData.debtPoints as point, i}
+            {#each chartData.categories[0].points as point, i}
                 <text x={point.x}>{i}</text>
             {/each}
         </g>
 
         <!-- x line for 0-->
-        {#if chartData.valueRange.min <= 0 && chartData.valueRange.max >= 0}
-            <line
-                x1="0"
-                x2={width}
-                y1={scaleY({ value: 0, valueRange: chartData.valueRange, height })}
-                y2={scaleY({ value: 0, valueRange: chartData.valueRange, height })}
-            />
+        {#if chartData.zeroY < height && chartData.zeroY >= 0}
+            <line x1="0" x2={width} y1={chartData.zeroY} y2={chartData.zeroY} />
         {/if}
 
         <!-- y axis -->
         <line x1="0" x2="0" y1="0" y2={height} />
         <g class="y" transform="translate(-10,0)">
-            {#each chartData.yAnnotations as value}
-                <text y={scaleY({ value, valueRange: chartData.valueRange, height })}>{Math.floor(value / 1000)}k</text>
+            {#each chartData.yAnnotations as annotation}
+                {#if annotation.y >= 0}
+                    <text y={annotation.y}>{abbreviate(annotation.value)}</text>
+                {/if}
             {/each}
         </g>
 
         <!-- data -->
-        {#if chartData.debtPoints}
-            <polyline style="stroke: red; stroke-width: 2" points={chartData.debtString} />
-            {@const endDebtPoint = chartData.debtPoints[numberMonths - 1]}
+        {#each chartData.categories as category}
+            {@const { points, string, displayColor, displayName } = category}
+            {@const endPoint = points[points.length - 1]}
+            <polyline style="stroke: {displayColor}; stroke-width: 2" points={string} />
 
-            <text y={endDebtPoint.y - 20} x={endDebtPoint.x + 60}>
-                Debt: {endDebtPoint.value}
+            <text y={endPoint.y - 20} x={endPoint.x + 60}>
+                {displayName}: {endPoint.value}
             </text>
-        {/if}
-
-        {#if chartData.wealthPoints}
-            <polyline style="stroke: green; stroke-width: 2" points={chartData.wealthString} />
-            {@const endWealth = chartData.wealthPoints[numberMonths - 1]}
-
-            <text y={endWealth.y - 20} x={endWealth.x + 60}>
-                Wealth: {endWealth.value}
-            </text>
-        {/if}
+        {/each}
     </svg>
 </div>
 
