@@ -5,6 +5,9 @@
 
 <main>
     <h1>Salary Sim</h1>
+    <a href="https://ornella.xyz/projects/salary-sim/" target="_blank" rel="noopener noreferrer">
+        What is this, honey?
+    </a>
     <Section title="About You" id="about-content">
         <ShowToggler storeKey={formComplete}>
             <Form slot="show-state" />
