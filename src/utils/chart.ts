@@ -21,12 +21,12 @@ export const getChartData = ({ height, width, numberMonths }, userInfo: UserInfo
     const wealthPoints = addCoordinates({ values: wealthValues, scale });
     return {
         categories: [
-            { points: debtPoints, string: makePointString(debtPoints), displayName: 'Debt', displayColor: 'red' },
+            { points: debtPoints, string: makePointString(debtPoints), displayName: 'Debt', displayColor: '#E5989B' },
             {
                 points: wealthPoints,
                 string: makePointString(wealthPoints),
                 displayName: 'Wealth',
-                displayColor: 'forestGreen',
+                displayColor: 'black',
             },
         ],
         valueRange,
